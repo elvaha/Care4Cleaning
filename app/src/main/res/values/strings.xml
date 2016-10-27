@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Care4Cleaning</string>
+    <string name="caseId">Case Id:</string>
+    <string name="description">Description:</string>
+    <string name="upload">Upload picture</string>
+    <string name="username">Username</string>
+    <string name="imageExplain">Press to take picture</string>
+</resources>
