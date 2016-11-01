@@ -12,9 +12,10 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="400dp"
         android:id="@+id/ImageView"
-        android:src="@drawable/default2_img"/>
+        android:src="@drawable/default2_img"
+        android:clickable="true"/>
     <TextView
         android:id="@+id/pictureExplain"
         android:layout_width="wrap_content"
@@ -30,7 +31,9 @@
         android:layout_height="wrap_content">
 
         <TableRow
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
             <TextView
                 android:layout_weight="0.2"
                 android:layout_height="wrap_content"
@@ -43,7 +46,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.8"/>
         </TableRow>
-        <TableRow>
+        <TableRow android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
             <TextView
                 android:layout_weight="0.2"
                 android:layout_width="wrap_content"
@@ -58,10 +62,10 @@
                 />
         </TableRow>
         <Button
+            android:id="@+id/sendPicture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/upload"/>
     </TableLayout>
-
 </RelativeLayout>
