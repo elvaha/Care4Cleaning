@@ -7,6 +7,7 @@ package com.example.elias.care4cleaning;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -15,6 +16,7 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.Response.ErrorListener;
 import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HurlStack;
@@ -24,6 +26,7 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -159,9 +162,63 @@ public class Communication {
 
     public void uploadPicture(final Bitmap bitmap,final String token,
                               final String caseId, final String description,
-                              final String imageName)
-    {
+                              final String imageName) {
         //TODO implement this method
+        String url = URL_UPLOADIMAGE;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                Log.d("Response", response);
+                SharedPreferences prefs = context.getSharedPreferences("myPrefs", MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString("token", token);
+                editor.commit();
+                boolean result = editor.commit();
+                Toast.makeText(context, response, Toast.LENGTH_SHORT).show();
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("ErrorResponseServer", error.toString());
+                if (error.getMessage() != null) {
+                    Log.d("ErrorResponseServer", error.getMessage().toString());
+                    Toast.makeText(context, error.getMessage().toString(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String> map = new HashMap<>();
+                JSONObject json = new JSONObject();
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                byte[] byteArray = byteArrayOutputStream.toByteArray();
+                String imageBase64 = Base64.encodeToString(byteArray, Base64.DEFAULT);
+
+                try {
+                    json.put("name", imageName);
+                    json.put("token", token);
+                    json.put("description", description);
+                    json.put("case_id", caseId);
+                    json.put("base64", imageBase64);
+                } catch (JSONException e) {
+                    Log.d("JsonException", e.getMessage().toString());
+                }
+                map.put("json", json.toString());
+                System.out.println("JSON:" + json.toString());
+                return map;
+            }
+        };
+
+        int socketTimeout = 20000;//20 seconds - change to what you want
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(policy);
+        // Add the request to the RequestQueue.
+
+        queue.add(stringRequest);
     }
 
     public void CreateUser(final String userName, final String token) {
@@ -182,7 +239,7 @@ public class Communication {
                         Toast.makeText(context,response,Toast.LENGTH_SHORT).show();
 
                     }
-                }, new Response.ErrorListener() {
+                }, new ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("ErrorResponseServer",error.toString());
