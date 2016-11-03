@@ -203,7 +203,7 @@ public class Communication {
                     json.put("token", token);
                     json.put("description", description);
                     json.put("case_id", caseId);
-                    json.put("base64", imageBase64);
+                    json.put("base64", imageBase64.toString());
                 } catch (JSONException e) {
                     Log.d("JsonException", e.getMessage().toString());
                 }
@@ -236,7 +236,7 @@ public class Communication {
                         SharedPreferences.Editor editor = prefs.edit();
                         editor.putString("token",token);
                         boolean result = editor.commit();
-                        Toast.makeText(context,response,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context,response,Toast.LENGTH_LONG).show();
 
                     }
                 }, new ErrorListener() {

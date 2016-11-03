@@ -11,6 +11,7 @@ import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,6 +32,10 @@ public class MainActivity extends AppCompatActivity {
     String imageName = "imageName";
     Context context;
     Bitmap imageBitmap;
+    private static final String TAG = "com.example.statechange";
+    String caseId = "";
+    String description = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,20 +53,51 @@ public class MainActivity extends AppCompatActivity {
         } else{
             createUser();
         }
+
+        sendPicture();
         //TODO setup your listeners for buttons etc....
+    }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        //ALWAYS CALL THE SUPER METHOD
+        super.onSaveInstanceState(outState);
+        Log.i(TAG, "onSaveInstanceState");
+		/* Here we put code now to save the state */
+        EditText editCaseId = (EditText) findViewById(R.id.caseId);
+        EditText editDescription = (EditText) findViewById(R.id.description);
 
+        caseId = editCaseId.getText().toString();
+        description = editDescription.getText().toString();
+
+    }
+
+    //this is called when our activity is recreated, but
+    //AFTER our onCreate method has been called
+    //EXTREMELY IMPORTANT DETAIL
+    @Override
+    protected void onRestoreInstanceState(Bundle savedState) {
+        super.onRestoreInstanceState(savedState);
+        Log.i(TAG, "onRestoreInstanceState");
+        ImageView imageView = (ImageView) findViewById(R.id.ImageView);
+
+        imageView.setImageBitmap(imageBitmap);
+        EditText editCaseId = (EditText) findViewById(R.id.caseId);
+        EditText editDescription = (EditText) findViewById(R.id.description);
+
+        editCaseId.setText(caseId);
+        editDescription.setText(description);
     }
 
 
     public void sendPicture(){
         Button btnSendPicture = (Button) findViewById(R.id.sendPicture);
-        EditText editCaseId = (EditText) findViewById(R.id.caseId);
-        EditText editDescription = (EditText) findViewById(R.id.description);
 
         btnSendPicture.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
+                Toast toast = Toast.makeText(context,"Uploading case...please wait",Toast.LENGTH_LONG);
+                toast.show();
                 EditText editCaseId = (EditText) findViewById(R.id.caseId);
                 EditText editDescription = (EditText) findViewById(R.id.description);
                 String caseId = editCaseId.getText().toString();
