@@ -5,4 +5,6 @@
     <color name="colorAccent">#B1D264</color>
     <color name="dimGrey">#a5a5a5</color>
     <color name="black">#000000</color>
+    <color name="warning">#B33A3A</color>
+    <color name="succes">#006600</color>
 </resources>

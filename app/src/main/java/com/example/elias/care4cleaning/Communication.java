@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.util.Base64;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -160,12 +161,8 @@ public class Communication {
 
     }
 
-    public void uploadPicture(final Bitmap bitmap,final String token,
-                              final String caseId, final String description,
-                              final String imageName) {
-        //TODO implement this method
+    public void uploadPicture(final Bitmap bitmap,final String token, final String caseId, final String description, final String imageName) {
         String url = URL_UPLOADIMAGE;
-
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
 
             @Override
@@ -176,7 +173,10 @@ public class Communication {
                 editor.putString("token", token);
                 editor.commit();
                 boolean result = editor.commit();
-                Toast.makeText(context, response, Toast.LENGTH_SHORT).show();
+                Toast toast = Toast.makeText(context, response, Toast.LENGTH_SHORT);
+                View view = toast.getView();
+                view.setBackgroundResource(R.color.colorPrimary);
+                toast.show();
             }
         }, new Response.ErrorListener() {
 
@@ -185,7 +185,10 @@ public class Communication {
                 Log.d("ErrorResponseServer", error.toString());
                 if (error.getMessage() != null) {
                     Log.d("ErrorResponseServer", error.getMessage().toString());
-                    Toast.makeText(context, error.getMessage().toString(), Toast.LENGTH_SHORT).show();
+                    Toast toast = Toast.makeText(context, "Error: Case not send, please check parameters", Toast.LENGTH_SHORT);
+                    View view = toast.getView();
+                    view.setBackgroundResource(R.color.warning);
+                    toast.show();
                 }
             }
         }) {
@@ -236,8 +239,10 @@ public class Communication {
                         SharedPreferences.Editor editor = prefs.edit();
                         editor.putString("token",token);
                         boolean result = editor.commit();
-                        Toast.makeText(context,response,Toast.LENGTH_LONG).show();
-
+                        Toast toast = Toast.makeText(context, response, Toast.LENGTH_SHORT);
+                        View view = toast.getView();
+                        view.setBackgroundResource(R.color.colorPrimary);
+                        toast.show();
                     }
                 }, new ErrorListener() {
             @Override
@@ -245,7 +250,10 @@ public class Communication {
                 Log.d("ErrorResponseServer",error.toString());
                 if (error.getMessage()!=null) {
                     Log.d("ErrorResponseServer", error.getMessage().toString());
-                    Toast.makeText(context,error.getMessage().toString(),Toast.LENGTH_SHORT).show();
+                    Toast toast = Toast.makeText(context, "User could not be created", Toast.LENGTH_SHORT);
+                    View view = toast.getView();
+                    view.setBackgroundResource(R.color.warning);
+                    toast.show();
                 }
             }
         }) {

@@ -53,9 +53,7 @@ public class MainActivity extends AppCompatActivity {
         } else{
             createUser();
         }
-
         sendPicture();
-        //TODO setup your listeners for buttons etc....
     }
 
     @Override
@@ -64,12 +62,6 @@ public class MainActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         Log.i(TAG, "onSaveInstanceState");
 		/* Here we put code now to save the state */
-        EditText editCaseId = (EditText) findViewById(R.id.caseId);
-        EditText editDescription = (EditText) findViewById(R.id.description);
-
-        caseId = editCaseId.getText().toString();
-        description = editDescription.getText().toString();
-
     }
 
     //this is called when our activity is recreated, but
@@ -80,29 +72,47 @@ public class MainActivity extends AppCompatActivity {
         super.onRestoreInstanceState(savedState);
         Log.i(TAG, "onRestoreInstanceState");
         ImageView imageView = (ImageView) findViewById(R.id.ImageView);
-
         imageView.setImageBitmap(imageBitmap);
-        EditText editCaseId = (EditText) findViewById(R.id.caseId);
-        EditText editDescription = (EditText) findViewById(R.id.description);
-
-        editCaseId.setText(caseId);
-        editDescription.setText(description);
     }
 
 
     public void sendPicture(){
         Button btnSendPicture = (Button) findViewById(R.id.sendPicture);
 
-        btnSendPicture.setOnClickListener(new View.OnClickListener(){
+        btnSendPicture.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
-                Toast toast = Toast.makeText(context,"Uploading case...please wait",Toast.LENGTH_LONG);
-                toast.show();
+            public void onClick(View v) {
                 EditText editCaseId = (EditText) findViewById(R.id.caseId);
                 EditText editDescription = (EditText) findViewById(R.id.description);
+                ImageView imageview = (ImageView) findViewById(R.id.ImageView);
                 String caseId = editCaseId.getText().toString();
                 String description = editDescription.getText().toString();
+
+
+                Toast errorToast = Toast.makeText(context, "Error", Toast.LENGTH_LONG);
+                View view = errorToast.getView();
+                view.setBackgroundResource(R.color.warning);
+
+                if (caseId == "" || description == "" || imageName == "") {
+                    errorToast.setText("Fields are missing");
+                    errorToast.show();
+                    return;
+                } else if (caseId != "") {
+                    try {
+                        Integer.parseInt(caseId);
+                    } catch (Exception e) {
+                        errorToast.setText("Case Must be a number");
+                        errorToast.show();
+                        return;
+                    }
+                }
+                Toast toast = Toast.makeText(context, "Uploading case...please wait", Toast.LENGTH_SHORT);
+                toast.show();
                 communication.uploadPicture(imageBitmap, token, caseId, description, imageName);
+
+                editCaseId.setText("");
+                editDescription.setText("");
+                imageview.setImageResource(R.drawable.default2_img);
             }
         });
     }

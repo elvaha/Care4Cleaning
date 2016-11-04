@@ -23,6 +23,13 @@
         android:textColor="@color/dimGrey"
         android:text="@string/imageExplain"
         android:layout_below="@id/ImageView"/>
+    <Button
+        android:id="@+id/sendPicture"
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_below="@+id/pictureExplain"
+        android:text="@string/upload"/>
 
     <TableLayout
         android:layout_toRightOf="@id/ImageView"
@@ -57,11 +64,6 @@
                 android:layout_height="wrap_content"
                 />
         </TableRow>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/upload"/>
     </TableLayout>
 
 </RelativeLayout>
